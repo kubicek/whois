@@ -61,6 +61,8 @@ module Whois
                 :expired
               when "domain is not generated into zone"
                 :out_of_zone
+              when "the domain isn't generated in the zone"
+                :out_of_zone
               when "to be deleted"
                 :delete_candidate
               else
