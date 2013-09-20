@@ -67,7 +67,7 @@ module Whois
                 :out_of_zone
               when "the domain is administratively kept in zone"
                 :kept_in_zone
-              when "renewal_forbidden"
+              when "renewal forbidden"
                 :renewal_forbidden
               when "deletion forbidden"
                 :deletion_forbidden
