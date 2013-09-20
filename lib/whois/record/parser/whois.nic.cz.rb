@@ -63,8 +63,20 @@ module Whois
                 :out_of_zone
               when "the domain isn't generated in the zone"
                 :out_of_zone
+              when "the domain is administratively kept out of zone"
+                :out_of_zone
+              when "the domain is administratively kept in zone"
+                :kept_in_zone
+              when "renewal_forbidden"
+                :renewal_forbidden
+              when "deletion forbidden"
+                :deletion_forbidden
               when "to be deleted"
                 :delete_candidate
+              when "update forbidden"
+                :update_forbidden
+              when "sponsoring registrar change forbidden"
+                :update_forbidden
               else
                 Whois.bug!(ParserError, "Unknown status `#{line}'.")
             end
