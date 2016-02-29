@@ -48,7 +48,8 @@ module Whois
             when  "dom_warn"  then :registered
             # The domain is expired and has not been renewed (14 days).
             when  "dom_lnot"  then :registered
-            when  "dom_exp"   then :registered
+            when  "dom_tran"  then :registered
+            when  "dom_exp"   then :expired
             # The domain losts its registrar (28 days).
             when  "dom_held"  then :redemption
             else
@@ -67,7 +68,6 @@ module Whois
           !available?
         end
 
-
         property_not_supported :created_on
 
         property_supported :updated_on do
@@ -82,6 +82,33 @@ module Whois
           end
         end
 
+        property_supported :registrar do
+          id = content_for_scanner.match(/^Tech-id\s+(.+)\n/)[1] rescue nil
+          name = content_for_scanner.match(/^Tech-name\s+(.+)\n/)[1] rescue nil
+
+          Record::Registrar.new(
+            :id   => id,
+            :name => name
+          )
+        end
+
+        property_supported :registrant_contacts do
+          id = content_for_scanner.match(/^Admin-id\s+(.+)\n/)[1] rescue nil
+          name = content_for_scanner.match(/^Admin-name\s+(.+)\n/)[1] rescue nil
+          address = content_for_scanner.match(/^Admin-address\s+(.+)\n/)[1] rescue nil
+          phone = content_for_scanner.match(/^Admin-telephone\s+(.+)\n/)[1] rescue nil
+          email = content_for_scanner.match(/^Admin-email\s+(.+)\n/)[1] rescue nil
+
+          [
+            Record::Contact.new(
+              :id       => id,
+              :name     => name,
+              :address  => address,
+              :phone    => phone,
+              :email    => email
+            )
+          ]
+        end
 
         property_supported :nameservers do
           content_for_scanner.scan(/dns_name\s+(.+)\n/).flatten.map do |name|
